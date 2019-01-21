@@ -1,3 +1,5 @@
+Steps to build and test
+
 1) cd /root
 2) git clone https://github.com/abhishek-aureaa/Notepad
 3) cd /root/Text-Editor
