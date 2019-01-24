@@ -1,12 +1,80 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QApplication>
+#include <QMessageBox>
+#include <QFile>
+#include <QFileDialog>
+#include <QTextStream>
+#include <qtextedit.h>
+#include <QFontDialog>
+#include <QFont>
+#include <QFontDatabase>
+#include <QTextCursor>
+#include <QColor>
+#include <QColorDialog>
+#include <QSyntaxHighlighter>
+#include <QtGui>
+
+class mySyntaxHighLighter: public QSyntaxHighlighter //Syntax Highligher class
+{
+
+  public:
+    mySyntaxHighLighter(QTextDocument* document):
+    QSyntaxHighlighter(document)
+    {
+    };
+
+    ~ mySyntaxHighLighter()
+    {};
+
+    void highlightBlock(const QString &text)
+    {
+
+    enum { NormalState = -1, CStyleComment };
+
+        int state = previousBlockState();
+        int start = 0;
+
+      for (int i = 0; i < text.length(); ++i)
+      {
+
+          if (state == CStyleComment)
+          {
+          if (text.mid(i, 2) == "*/")
+          {
+              state = NormalState;
+              setFormat(start, i - start + 2, Qt::blue);
+          }
+          }
+          else
+          {
+          if (text.mid(i, 2) == "//")
+          {
+              setFormat(i, text.length() - i, Qt::red);
+              break;
+          }
+          else if (text.mid(i, 2) == "/*")
+		            {
+              start = i;
+              state = CStyleComment;
+          }
+          }
+      }
+    };
+};
+
+                                             
+
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     this->setCentralWidget(ui->textEdit);
+    mySyntaxHighLighter* highlighter = new mySyntaxHighLighter(ui->textEdit->document());
+
 }
 
 MainWindow::~MainWindow()
