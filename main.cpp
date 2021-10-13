@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include <QApplication>
 
+/*ABC*/
 //main
 int main(int argc, char *argv[])
 {
